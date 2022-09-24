@@ -22,32 +22,38 @@ function cachingDecoratorNew(func) {
 }
 
 
-function debounceDecoratorNew(func) {
+function debounceDecoratorNew(func, ms) {
   // Ваш код
   let timerId;
 
   return function wrapper(...args) {
     if (timerId == undefined) {
       func.apply(this, args);
+      timerId = true;
     }
 
-    clearTimeout(() => {
+    clearTimeout(timerId); 
+    timerId = setTimeout (() => {
       func.apply(this, args)
     }, ms);
   }
 }
 
-function debounceDecorator2(func) {
+function debounceDecorator2(func, ms) {
   // Ваш код
   let timerId
+  function wrapper(...args) {
   wrapper.count = 0;
-  return function wrapper(...args) {
     if (timerId == undefined) {
       func.apply(this, args);
+      timerId = true;
       wrapper.count++;
     }
-    clearTimeout(() => {
-      func.apply(this, args)
+    clearTimeout(timerId);
+    timerId = setTimeout(() => {
+      func.apply(this, args);
     }, ms);
+    wrapper.count++
   }
+  return wrapper;
 }
